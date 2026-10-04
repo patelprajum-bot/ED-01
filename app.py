@@ -208,94 +208,95 @@ else:
 
             column_mapping = map_columns(df)
 
-            scored_df = calculate_support_score(
+            scored_df =calculate_support_score(
     df,
     column_mapping
 )
 
             st.divider()
 
-st.markdown("### 🎯 Support Allocation")
+            st.markdown("### 🎯 Support Allocation")
 
-support_percentage = st.slider(
-    "Select support capacity (%)",
-    min_value=5,
-    max_value=50,
-    value=20,
-    step=5
+            support_percentage = st.slider(
+                  "Select support capacity (%)",
+                   min_value=5,
+                   max_value=50,
+                   value=20,
+                   step=5
 )
 
-st.info(
-    f"Admin selected {support_percentage}% of students for additional support."
+
+            st.info(
+                   f"Admin selected {support_percentage}% of students for additional support."
 )
-mapping_df = pd.DataFrame(
+            mapping_df = pd.DataFrame(
               column_mapping.items(),
               columns=["Original Column", "Detected Meaning"]
 )
-st.dataframe(
+            st.dataframe(
               mapping_df,
               use_container_width=True
 )
 
-st.divider()
-st.markdown('### Data Detection Status')
+            st.divider()
+            st.markdown('### Data Detection Status')
 
 
 
-st.divider()
+            st.divider()
 
-st.markdown("### 🎯 Support Allocation")
+            st.markdown("### 🎯 Support Allocation")
 
-support_percentage = st.slider(
-    "Select the percentage of students who can receive additional support",
-    min_value=5,
-    max_value=50,
-    value=20,
-    step=5
+            support_percentage = st.slider(
+                "Select the percentage of students who can receive additional support",
+                 min_value=5,
+                 max_value=50,
+                 value=20,
+                 step=5
 )
 
-st.info(
-    f"Admin has selected {support_percentage}% support capacity."
+            st.info(
+                f"Admin has selected {support_percentage}% support capacity."
 )
-total_students = len(scored_df)
+            total_students = len(scored_df)
 
-students_to_select = max(
+            students_to_select = max(
     1,
     int(np.ceil(total_students * support_percentage / 100))
 )
 
-priority_df = scored_df.sort_values(
+            priority_df = scored_df.sort_values(
     by="support_score",
     ascending=False
 ).reset_index(drop=True)
 
-priority_df["Priority Rank"] = priority_df.index + 1
+            priority_df["Priority Rank"] = priority_df.index + 1
 
-selected_students = priority_df.head(
-    students_to_select
+            selected_students = priority_df.head(
+            students_to_select
 )
 
-st.markdown("### 🚨 Priority Support List")
+            st.markdown("### 🚨 Priority Support List")
 
-st.write(
+            st.write(
     f"Selected {students_to_select} students "
     f"from {total_students} total students "
     f"({support_percentage}%)."
 )
 
-display_columns = []
+            display_columns = []
 
-for column, category in column_mapping.items():
-    if category in ["student_id", "student_name"]:
-        display_columns.append(column)
+            for column, category in column_mapping.items():
+              if category in ["student_id", "student_name"]:
+               display_columns.append(column)
 
-display_columns += [
+               display_columns += [
     "support_score",
     "Priority Rank",
     "support_reasons"
 ]
 
-st.dataframe(
+            st.dataframe(
     selected_students[display_columns].style.format({
         "support_score": "{:.2f}"
     }),
